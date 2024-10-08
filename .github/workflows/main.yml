@@ -1,54 +1,32 @@
 name: Automated JMeter Tests
-
 on: 
   push:
     branches: 
       - main
-
 jobs:
   automated-jmeter-tests:
     runs-on: windows-latest
-
-    env:
-      RAMP_UP: 100  # Set desired ramp-up time in seconds
-      THREAD_COUNT: 10  # Set desired thread count
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
       - name: Set Up JMeter
-        run: choco install jmeter -y
-
+        run: choco install jmeter -y  # Use Chocolatey to install JMeter on Windows
       - name: Check JMeter Version
-        run: jmeter -v
-
-      - name: Update JMeter Test Parameters
-        run: |
-          $xmlFile = "Demoblaze.jmx"
-          [xml]$xml = Get-Content $xmlFile
-          $threadGroup = $xml.jmeterTestPlan.hashTree.hashTree.ThreadGroup
-          $threadGroup.'intProp' | Where-Object { $_.name -eq 'ThreadGroup.num_threads' } | ForEach-Object { $_.'#text' = $env:THREAD_COUNT }
-          $threadGroup.'intProp' | Where-Object { $_.name -eq 'ThreadGroup.ramp_time' } | ForEach-Object { $_.'#text' = $env:RAMP_UP }
-          $xml.Save($xmlFile)
-
+        run: jmeter -v # This creates both the results folder and the html folder inside it
       - name: Run JMeter Tests
-        run: jmeter -n -t Demoblaze.jmx -l results/result.jtl -e -o html
-
+        run: jmeter -n -t scripts/DemoBlaze.jmx  -Jusers=1 -Jramp_up=1 -l results/result.csv -e -o html
       - name: List Results Directory
         run: |
           echo "Listing results directory:"
-          dir results
-          
+          dir results # Use 'dir' on Windows instead of 'ls'
       - name: Upload JMeter Results
         uses: actions/upload-artifact@v3
         with:
           name: jmeter-results
           path: results/result.jtl
-
       - name: Upload HTML Report
         uses: actions/upload-artifact@v3
         with:
           name: jmeter-html-report
-          path: html
+          path: html  # This uploads the entire HTML report folder
           if-no-files-found: error
