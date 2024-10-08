@@ -3,12 +3,7 @@ name: Automated JMeter Tests
 on: 
 
   workflow_dispatch:  # Enables manual dispatch
-  push:
-
-    branches: 
-
-      - demoblaze
- 
+   
 jobs:
 
   automated-jmeter-tests:
