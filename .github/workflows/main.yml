@@ -30,7 +30,7 @@ jobs:
 
       - name: Run JMeter Tests
 
-        run: jmeter -n -t Demoblaze.jmx  -Jusers=1 -Jramp_up=1 -l results/result.csv -e -o html
+        run: jmeter -n -t Demoblaze.jmx  -Jusers=1 -Jramp_up=1 -l results/result.csv -e -o html -j results/jmeter.log
 
       - name: List Results Directory
 
