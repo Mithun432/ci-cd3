@@ -49,6 +49,13 @@ jobs:
           name: jmeter-results
 
           path: results/result.jtl
+          
+      - name: Upload JMeter Log
+       
+        uses: actions/upload-artifact@v3
+        with:
+          name: jmeter-log
+          path: results/jmeter.log
 
       - name: Upload HTML Report
 
