@@ -27,9 +27,9 @@ jobs:
         run: |
           $xmlFile = "Demoblaze.jmx"
           [xml]$xml = Get-Content $xmlFile
-          $threadGroup = $xml.jmeterTestPlan.threadGroups.threadGroup
-          $threadGroup.numThreads = $env:THREAD_COUNT
-          $threadGroup.rampTime = $env:RAMP_UP
+          $threadGroup = $xml.jmeterTestPlan.hashTree.hashTree.ThreadGroup
+          $threadGroup.'intProp' | Where-Object { $_.name -eq 'ThreadGroup.num_threads' } | ForEach-Object { $_.'#text' = $env:THREAD_COUNT }
+          $threadGroup.'intProp' | Where-Object { $_.name -eq 'ThreadGroup.ramp_time' } | ForEach-Object { $_.'#text' = $env:RAMP_UP }
           $xml.Save($xmlFile)
 
       - name: Run JMeter Tests
@@ -39,7 +39,7 @@ jobs:
         run: |
           echo "Listing results directory:"
           dir results
-
+          
       - name: Upload JMeter Results
         uses: actions/upload-artifact@v3
         with:
