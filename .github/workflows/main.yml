@@ -1,0 +1,54 @@
+name: Automated JMeter Tests
+
+on: 
+  push:
+    branches: 
+      - main
+
+jobs:
+  automated-jmeter-tests:
+    runs-on: windows-latest
+
+    env:
+      RAMP_UP: 100  # Set desired ramp-up time in seconds
+      THREAD_COUNT: 10  # Set desired thread count
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Up JMeter
+        run: choco install jmeter -y
+
+      - name: Check JMeter Version
+        run: jmeter -v
+
+      - name: Update JMeter Test Parameters
+        run: |
+          $xmlFile = "Demoblaze.jmx"
+          [xml]$xml = Get-Content $xmlFile
+          $threadGroup = $xml.jmeterTestPlan.threadGroups.threadGroup
+          $threadGroup.numThreads = $env:THREAD_COUNT
+          $threadGroup.rampTime = $env:RAMP_UP
+          $xml.Save($xmlFile)
+
+      - name: Run JMeter Tests
+        run: jmeter -n -t Demoblaze.jmx -l results/result.jtl -e -o html
+
+      - name: List Results Directory
+        run: |
+          echo "Listing results directory:"
+          dir results
+
+      - name: Upload JMeter Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: jmeter-results
+          path: results/result.jtl
+
+      - name: Upload HTML Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: jmeter-html-report
+          path: html
+          if-no-files-found: error
