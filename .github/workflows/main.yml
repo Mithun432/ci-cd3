@@ -7,7 +7,7 @@ on:
     branches: 
 
       - demoblaze
-
+  workflow_dispatch:  # Enables manual dispatch
 jobs:
 
   automated-jmeter-tests:
