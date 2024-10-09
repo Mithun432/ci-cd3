@@ -15,11 +15,13 @@ on:
           - 10
           - 20
           - 50
+          - 100
+          - 150
         default: 1  # Default option
       ramp_up:  # Input for ramp-up time
         description: "Ramp-up time in seconds"
         required: true
-        default: 100
+        default: 10
  
   # Automatically trigger on push to specific branches
   push:
