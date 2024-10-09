@@ -2,7 +2,22 @@ name: Automated JMeter Tests
  
 on:
   workflow_dispatch:  # Allow manual trigger
- 
+    inputs:
+      users:
+        description: 'Number of users (threads)'  # This will be the label
+        required: true
+        type: choice  # Dropdown selection
+        options: 
+          - 1
+          - 5
+          - 10
+          - 20
+          - 50
+        default: 1  # Default option
+      ramp_up:  # Input for ramp-up time
+        description: "Ramp-up time in seconds"
+        required: true
+        default: 100
 jobs:
   automated-jmeter-tests:
     runs-on: windows-latest
