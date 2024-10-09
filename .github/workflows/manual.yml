@@ -22,8 +22,6 @@ on:
         description: "Ramp-up time in seconds"
         required: true
         default: 10
-  schedule:
-    - cron: "*/5 * * * *"  # Runs every 5 minutes
 
  
   # Automatically trigger on push to specific branches
