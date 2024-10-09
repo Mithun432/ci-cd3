@@ -3,8 +3,8 @@ on:
   push:
     branches: 
       - demoblaze
-  schedule:
-    - cron: "30 15 * * * *"  # Runs every 5 minutes  
+  # schedule:
+  #   - cron: "30 15 * * * *"  # Runs every 5 minutes  
 jobs:
   automated-jmeter-tests:
     runs-on: windows-latest
